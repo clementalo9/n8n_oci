@@ -30,8 +30,7 @@ Click the button above to deploy automatically in your Oracle tenancy.
 1. Log into your Oracle Cloud account
 2. Select your compartment
 3. Launch the stack and follow the prompts
-   (Resource Manager will ask for `vm_admin_user`, `vm_admin_password`,
-   and `ssh_public_key`)
+   (Resource Manager will ask for your `ssh_public_key`)
 
 ## 🔧 Manual Deployment
 ```bash
@@ -68,9 +67,8 @@ You can find available Ubuntu image OCIDs in the Oracle Cloud Console under
 > Change them in `docker-compose.yml` after first deployment.
 
 ### VM Credentials
-The Terraform variables `vm_admin_user`, `vm_admin_password`, and `ssh_public_key`
-configure the SSH login for the created virtual machine. OCI Resource Manager
-will prompt for these values when launching the stack.
+The virtual machine uses the default `opc` user with SSH key authentication.
+Provide your `ssh_public_key` when launching the stack to allow SSH access.
 
 ## 🌐 Accessing n8n
 Go to `http://<your-instance-public-ip>:5678`
