@@ -12,11 +12,12 @@ data "oci_identity_availability_domains" "ads" {
   compartment_id = local.compartment_ocid
 }
 
+# Fixed: Changed shape filter to match the VM shape we're actually using
 data "oci_core_images" "ubuntu" {
   compartment_id           = local.compartment_ocid
   operating_system         = "Canonical Ubuntu"
   operating_system_version = "22.04"
-  shape                    = "VM.Standard.A1.Flex"
+  shape                    = "VM.Standard.E2.1.Micro"
 }
 
 resource "oci_core_virtual_network" "n8n_vcn" {
@@ -113,11 +114,7 @@ resource "oci_core_instance" "n8n_instance" {
   display_name        = "n8n-instance"
   shape               = "VM.Standard.E2.1.Micro"
 
-  shape_config {
-    memory_in_gbs = 1
-    ocpus         = 1
-  }
-
+  # Fixed: Removed shape_config block - not needed for micro instances
   source_details {
     source_type = "image"
     source_id   = data.oci_core_images.ubuntu.images[0].id
