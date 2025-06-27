@@ -12,11 +12,12 @@ data "oci_identity_availability_domains" "ads" {
   compartment_id = local.compartment_ocid
 }
 
+# Fixed: Changed shape filter to match the VM shape we're actually using
 data "oci_core_images" "ubuntu" {
   compartment_id           = local.compartment_ocid
   operating_system         = "Canonical Ubuntu"
   operating_system_version = "22.04"
-  shape                    = "VM.Standard.A1.Flex"
+  shape                    = "VM.Standard.E2.1.Micro"
 }
 
 resource "oci_core_virtual_network" "n8n_vcn" {
@@ -53,30 +54,12 @@ resource "oci_core_security_list" "n8n_security" {
     source      = "0.0.0.0/0"
     source_type = "CIDR_BLOCK"
     tcp_options {
-      min = 80
-      max = 80
-    }
-  }
-
-  ingress_security_rules {
-    protocol    = "6"
-    source      = "0.0.0.0/0"
-    source_type = "CIDR_BLOCK"
-    tcp_options {
-      min = 443
+      min = 443 # HTTPS for Nginx
       max = 443
     }
   }
-
-  ingress_security_rules {
-    protocol    = "6"
-    source      = "0.0.0.0/0"
-    source_type = "CIDR_BLOCK"
-    tcp_options {
-      min = 5678
-      max = 5678
-    }
-  }
+  # Port 80 (HTTP) is no longer needed as Nginx handles HTTP to HTTPS redirection and only listens on 443 publicly for n8n.
+  # Port 5678 (n8n direct) is no longer needed as Nginx proxies to it locally.
 }
 
 resource "oci_core_internet_gateway" "n8n_igw" {
@@ -111,13 +94,9 @@ resource "oci_core_instance" "n8n_instance" {
   availability_domain = data.oci_identity_availability_domains.ads.availability_domains[0].name
   compartment_id      = local.compartment_ocid
   display_name        = "n8n-instance"
-  shape               = "VM.Standard.A1.Flex"
+  shape               = "VM.Standard.E2.1.Micro"
 
-  shape_config {
-    memory_in_gbs = 4
-    ocpus         = 1
-  }
-
+  # Fixed: Removed shape_config block - not needed for micro instances
   source_details {
     source_type = "image"
     source_id   = data.oci_core_images.ubuntu.images[0].id

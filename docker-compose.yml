@@ -1,14 +1,33 @@
+# This is an example docker-compose.yml for local development or testing.
+# For production deployment on OCI, the instance uses a script (`scripts/install_n8n.sh`)
+# to generate a docker-compose.yml with credentials passed from Terraform
+# and includes an Nginx reverse proxy for HTTPS.
+
 services:
   n8n:
     image: n8nio/n8n
     restart: unless-stopped
-    container_name: n8n
+    container_name: n8n_local # Renamed to avoid conflict if running alongside a deployed instance locally
     ports:
-      - "5678:5678"
+      - "5678:5678" # n8n will be accessible on http://localhost:5678
     environment:
-      - GENERIC_TIMEZONE=Europe/Madrid
+      - GENERIC_TIMEZONE=Europe/Madrid # Example: Europe/Madrid. Change to your timezone.
       - N8N_BASIC_AUTH_ACTIVE=true
-      - N8N_BASIC_AUTH_USER=admin
-      - N8N_BASIC_AUTH_PASSWORD=strongpassword
+      # For local development, you can set credentials here directly,
+      # or use a .env file (recommended: create a .env file in the same directory with these lines:
+      # N8N_BASIC_AUTH_USER=your_user
+      # N8N_BASIC_AUTH_PASSWORD=your_very_strong_password
+      # ).
+      # Make sure to add .env to your .gitignore file if you create it.
+      - N8N_BASIC_AUTH_USER=${N8N_BASIC_AUTH_USER:-admin} # Example default, override with .env
+      - N8N_BASIC_AUTH_PASSWORD=${N8N_BASIC_AUTH_PASSWORD:-changeme} # Example default, override with .env
+      # - N8N_ENCRYPTION_KEY=your_strong_encryption_key # Recommended for credential encryption
+      # When running n8n locally over HTTP (not HTTPS), N8N_SECURE_COOKIE should be false.
+      # The production script sets this to true because it uses HTTPS via Nginx.
+      - N8N_SECURE_COOKIE=false
     volumes:
-      - ./n8n_data:/home/node/.n8n
+      # Creates a directory 'n8n_data_local' in the current directory to persist n8n data.
+      - ./n8n_data_local:/home/node/.n8n
+    # To run as non-root user (recommended):
+    # user: "1000:1000" # Or "node:node" depending on the base image.
+                       # Ensure ./n8n_data_local directory is writable by this user on the host.
