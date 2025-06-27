@@ -111,7 +111,7 @@ resource "oci_core_instance" "n8n_instance" {
   availability_domain = data.oci_identity_availability_domains.ads.availability_domains[0].name
   compartment_id      = local.compartment_ocid
   display_name        = "n8n-instance"
-  shape               = "VM.Standard.A1.Flex"
+  shape               = "VM.Standard.E2.1.Micro"
 
   shape_config {
     memory_in_gbs = 4
