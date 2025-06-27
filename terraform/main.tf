@@ -54,30 +54,12 @@ resource "oci_core_security_list" "n8n_security" {
     source      = "0.0.0.0/0"
     source_type = "CIDR_BLOCK"
     tcp_options {
-      min = 80
-      max = 80
-    }
-  }
-
-  ingress_security_rules {
-    protocol    = "6"
-    source      = "0.0.0.0/0"
-    source_type = "CIDR_BLOCK"
-    tcp_options {
-      min = 443
+      min = 443 # HTTPS for Nginx
       max = 443
     }
   }
-
-  ingress_security_rules {
-    protocol    = "6"
-    source      = "0.0.0.0/0"
-    source_type = "CIDR_BLOCK"
-    tcp_options {
-      min = 5678
-      max = 5678
-    }
-  }
+  # Port 80 (HTTP) is no longer needed as Nginx handles HTTP to HTTPS redirection and only listens on 443 publicly for n8n.
+  # Port 5678 (n8n direct) is no longer needed as Nginx proxies to it locally.
 }
 
 resource "oci_core_internet_gateway" "n8n_igw" {
