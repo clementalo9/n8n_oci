@@ -114,7 +114,7 @@ resource "oci_core_instance" "n8n_instance" {
   shape               = "VM.Standard.E2.1.Micro"
 
   shape_config {
-    memory_in_gbs = 4
+    memory_in_gbs = 1
     ocpus         = 1
   }
 
