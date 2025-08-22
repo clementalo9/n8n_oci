@@ -1,5 +1,40 @@
-- name: ssh_public_key
-  title: SSH Public Key
-  description: Paste your SSH public key to access the virtual machine via SSH
-  required: true
+title: "n8n on OCI"
+description: "Creates networking + a compute instance and installs n8n via cloud-init/Docker."
+schemaVersion: 1.1.0
 
+variableGroups:
+  - title: "Required"
+    variables:
+      - tenancy_ocid
+      - ssh_public_key
+      - availability_domain
+      - shape
+  - title: "Flex shape configuration"
+    variables:
+      - ocpus
+      - memory_in_gbs
+
+variables:
+  shape:
+    type: enum
+    title: "Compute shape"
+    description: "Use a Flex shape to customize OCPUs/RAM. E2.1.Micro is a fixed x86 shape."
+    default: "VM.Standard.A1.Flex"
+    enum:
+      - "VM.Standard.A1.Flex"
+      - "VM.Standard.E4.Flex"
+      - "VM.Standard.E2.1.Micro"
+
+  ocpus:
+    type: integer
+    title: "OCPUs (Flex only)"
+    description: "Applies only to Flex shapes."
+    minimum: 1
+    default: 1
+
+  memory_in_gbs:
+    type: integer
+    title: "Memory in GB (Flex only)"
+    description: "Applies only to Flex shapes."
+    minimum: 1
+    default: 6
