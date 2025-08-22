@@ -32,11 +32,6 @@ n8n will run comfortably within those limits.
 
 You can use the button below to provision the instance and network infrastructure:
 
-[![Deploy to Oracle Cloud](https://github.com/clementalo9/oke_A1/raw/main/images/Deploy2OCI.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/clementalo9/n8n_oci/archive/refs/heads/main.zip)
-
----
-## 🛠️ Manual Deployment with Terraform
-
 [![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](
   https://cloud.oracle.com/resourcemanager/stacks/create?region=home&zipUrl=https://github.com/vongrossi/n8n_oci/archive/refs/heads/main.zip
 )
