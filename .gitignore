@@ -4,14 +4,33 @@ node_modules/
 # Local docker volume
 n8n_data/
 
-# Terraform state
+# Terraform state files
 *.tfstate
-*.tfstate.*
+*.tfstate.backup
+
+# Crash log files
+crash.log
+
+# Terraform variable files
+*.tfvars
+*.tfvars.json
+
+# Terraform directories
 .terraform/
 
-# Logs and temporary files
-*.log
-*.tmp
-*.swp
-*~
+# Terraform lock file (optional)
+.terraform.lock.hcl
+
+# IDE and OS-specific files
 .DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.idea/
+*.vscode/
+
+# Log files
+*.log
+
+# Backup files
+*~
